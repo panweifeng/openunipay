@@ -9,3 +9,7 @@
 *.pydevproject
 .project
 .pydevproject
+.pypirc
+/dist/
+/build/
+/openunipay.egg-info/
