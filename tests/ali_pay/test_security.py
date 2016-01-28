@@ -1,5 +1,5 @@
 import unittest
-from ali_pay import security
+from openunipay.ali_pay import security
 
 
 class TestSecurity(unittest.TestCase):
