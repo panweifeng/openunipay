@@ -1,0 +1,3 @@
+
+class PayWayError(Exception):
+    pass

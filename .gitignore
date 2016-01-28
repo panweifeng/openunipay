@@ -1,0 +1,11 @@
+/__pycache__/
+/.settings/
+/files/
+*.pyc
+*.sqlite
+*.sqlite3
+*.idea
+*.pyproj.user
+*.pydevproject
+.project
+.pydevproject
