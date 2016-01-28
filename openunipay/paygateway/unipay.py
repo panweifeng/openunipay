@@ -15,7 +15,7 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     @param payway: payway
     @param expire: expire in minutes 
     '''
-    if payway not in _PAY_GATEWAY:
+    if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
     
     orderItemObj = OrderItem()
@@ -45,7 +45,7 @@ def query_order(orderno):
 
 @transaction.atomic
 def process_notify(payway, requestContent):
-    if payway not in _PAY_GATEWAY:
+    if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
     payResult = _PAY_GATEWAY[payway].process_notify(requestContent)
     if payResult.Succ:
@@ -54,3 +54,6 @@ def process_notify(payway, requestContent):
         orderItemObj.dt_pay = datetime.local_now()
         orderItemObj.save()
     return payResult
+
+def is_supportted_payway(payway):
+    return payway in _PAY_GATEWAY

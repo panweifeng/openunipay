@@ -8,7 +8,6 @@ from datetime import timedelta
 
 PAY_WAY_WEIXIN = 'WEIXIN'
 PAY_WAY_ALI = 'ALI'
-FEE_TYPE = (('CNY', u'CNY-人民币'),)
 PAY_WAY = ((PAY_WAY_WEIXIN, u'微信支付'), (PAY_WAY_ALI, u'支付宝支付'),)
 
 
@@ -23,7 +22,7 @@ class OrderItem(models.Model):
     dt_end = models.DateTimeField(verbose_name=u'交易失效时间', null=False, blank=False, editable=False)
     dt_pay = models.DateTimeField(verbose_name=u'付款时间', null=True, blank=True, editable=False)
     paied = models.BooleanField(verbose_name=u'已收款', null=False, blank=False, default=False, editable=False)
-    payway = models.CharField(verbose_name=u'支付方式', max_length=10, null=False, blank=False, choices=PAY_WAY, default=FEE_TYPE[0][0])
+    payway = models.CharField(verbose_name=u'支付方式', max_length=10, null=False, blank=False, choices=PAY_WAY, default=PAY_WAY[0][0])
     date_create = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     date_update = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     
