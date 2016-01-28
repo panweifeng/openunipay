@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
@@ -15,7 +15,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.3',
+    version='0.1.5',
 
     description='openunipay. 统一支付接口. 集成了微信支付、支付宝支付',
     long_description=long_description,
@@ -56,7 +56,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages= ['openunipay'],
+    packages=find_packages(exclude=['tests*', ]),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
