@@ -9,5 +9,4 @@ def process_notify(request):
     _logger.info('received weixin pay notification.body:{}'.format(request.body))
     unipay.process_notify(PAY_WAY_WEIXIN, request.body)
     return HttpResponse('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>',
-                        content_type='application/xml',
-                        status_code=200)
+                        'application/xml', 200)

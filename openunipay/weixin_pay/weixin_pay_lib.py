@@ -10,7 +10,7 @@ from openunipay.paygateway import PayResult
 
 CODE_SUCC = 'SUCCESS'
 TRADE_STATE_SUCC = 'SUCCESS'
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('openunipay.weixin')
 
 def create_order(weixinOrderObj):
     assert isinstance(weixinOrderObj, WeiXinOrder)

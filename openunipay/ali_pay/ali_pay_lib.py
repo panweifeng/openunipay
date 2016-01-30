@@ -4,7 +4,7 @@ from .models import AliPayOrder, AliPayResult
 from .security import verify
 from openunipay.paygateway import PayResult
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('openunipay.ali')
 TRADE_STATE_SUCC = 'TRADE_FINISHED'
 
 def create_order(orderObj):
