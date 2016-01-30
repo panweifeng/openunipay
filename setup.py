@@ -15,7 +15,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.6',
+    version='0.1.7',
 
     description='openunipay. 统一支付接口. 集成了微信支付、支付宝支付',
     long_description=long_description,
