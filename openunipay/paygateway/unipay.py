@@ -30,7 +30,7 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     orderItemObj.save()
     
     # send order to pay gateway
-    gatewayData = _PAY_GATEWAY[payway].create_order(user, orderItemObj, clientIp)
+    gatewayData = _PAY_GATEWAY[payway].create_order(orderItemObj, clientIp)
     return gatewayData
 
 @transaction.atomic
