@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from .models import AliPayOrder, AliPayResult
-from .security import verify
 from openunipay.paygateway import PayResult
-from openunipay.ali_pay import logger
+from openunipay.ali_pay import logger, security
+from openunipay import exceptions
 
 TRADE_STATE_SUCC = 'TRADE_FINISHED'
 
@@ -12,21 +12,8 @@ def create_order(orderObj):
     
 def process_notify(request):
     result = PayResult(False, None)
-    try:
-        _process_order_result(dict(request.POST), result)
-    except:
-        logger.exception('process pay result notification failed. received:{}'.format(request.body))
-    return result
-
-def query_order(orderNo):
-    orderObj = AliPayOrder.objects.get(out_trade_no=orderNo)
-    result = PayResult(False, None)
-    result.succ = orderObj.pay_result.trade_status == TRADE_STATE_SUCC
-    result.orderno = orderObj.out_trade_no
-    return result       
-
-def _process_order_result(valueDict, result):
-    if verify(valueDict):
+    valueDict = request.POST.dict()
+    if security.verify_ali_data(valueDict):
         # save data
         orderObj = AliPayOrder.objects.get(out_trade_no=valueDict['out_trade_no'])
         payResultObj = orderObj.pay_result
@@ -45,4 +32,12 @@ def _process_order_result(valueDict, result):
         payResultObj.save()
     else:
         logger.error('received unverified notification:{}'.format(valueDict))
-    
+        raise exceptions.InsecureDataError()
+    return result
+
+def query_order(orderNo):
+    orderObj = AliPayOrder.objects.get(out_trade_no=orderNo)
+    result = PayResult(False, None)
+    result.succ = orderObj.pay_result.trade_status == TRADE_STATE_SUCC
+    result.orderno = orderObj.out_trade_no
+    return result       

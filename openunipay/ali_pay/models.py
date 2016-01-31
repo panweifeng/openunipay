@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.conf import settings
-from . import security
+from urllib.parse import quote_plus
+from openunipay.ali_pay import security
 
 _SERVICE = 'mobile.securitypay.pay'
 _CHARSET = 'utf-8'
@@ -31,7 +32,7 @@ class AliPayOrder(models.Model):
     def sign(self):
         # sign data
         data = self._compose_data()
-        return '{}&sign_type="RSA"&sign="{}"'.format(data, security.sign(data))
+        return '{}&sign_type="RSA"&sign="{}"'.format(data, quote_plus(security.sign(data)))
     
     def _compose_data(self):
         valueDict = self._get_vlaue_dict()

@@ -52,7 +52,7 @@ ALIPAY = {<br/>
 		'partner':'XXX', //支付宝partner ID<br/>
 		'seller_id':'XXX', //收款方支付宝账号如 pan.weifeng@live.cn<br/>
 		'notify_url':'https://XXX/notify/alipay/', //支付宝异步通知接收URL<br/>
-		'ali_public_key_pem':'PATH to PEM File', //支付宝公钥的PEM文件路径。如何查看，请参看支付宝文档<br/>
+		'ali_public_key_pem':'PATH to PEM File', //支付宝公钥的PEM文件路径,在支付宝合作伙伴密钥管理中查看(需要使用合作伙伴支付宝公钥)。如何查看，请参看支付宝文档<br/>
 		'rsa_private_key_pem':'PATH to PEM File',//您自己的支付宝账户的私钥的PEM文件路径。如何设置，请参看支付宝文档<br/>
 		'rsa_public_key_pem':'PATH to PEM File',//您自己的支付宝账户的公钥的PEM文件路径。如何设置，请参看支付宝文档<br/>
 	}<br/>
