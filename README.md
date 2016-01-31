@@ -52,6 +52,9 @@ ALIPAY = {
         'partner':'XXX', //支付宝partner ID
         'seller_id':'XXX', //收款方支付宝账号如 pan.weifeng@live.cn
         'notify_url':'https://XXX/notify/alipay/', //支付宝异步通知接收URL
+        'ali_public_key_pem':'PATH to PEM File', //支付宝公钥的PEM文件路径。如何查看，请参看支付宝文档
+        'rsa_private_key_pem':'PATH to PEM File',//您自己的支付宝账户的私钥的PEM文件路径。如何设置，请参看支付宝文档
+        'rsa_public_key_pem':'PATH to PEM File',//您自己的支付宝账户的公钥的PEM文件路径。如何设置，请参看支付宝文档
         }
 #####微信支付配置
 WEIXIN = {
@@ -72,5 +75,6 @@ python manage.py migrate --run-syncdb
 更新日志：
 =======================
 2016-01-30 v0.1.6 修正创建order的错误
+2016-01-31 v0.1.9 Fix #2 查询订单状态时，如果已从支付接口获取到Notification, 就无需再次从支付接口查询订单状态
 
 ----

@@ -1,6 +1,12 @@
+'''
+@summary: This is the main interface that can be used to create order, query order status and process notification 
+@author: EricPan(pan.weifeng@live.cn)
+@contact: EricPan(pan.weifeng@live.cn)
+'''
+
 from django.db import transaction
 from openunipay.models import OrderItem, PAY_WAY_WEIXIN, PAY_WAY_ALI
-from openunipay.paygateway import weixin, alipay
+from openunipay.paygateway import weixin, alipay, PayResult
 from openunipay import exceptions
 from openunipay.util import datetime
     
@@ -13,6 +19,12 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     @summary: create order
     @param orderno: order no
     @param payway: payway
+    @param clientIp: IP address of the client that start the pay process
+    @param product_desc: short description of the product
+    @param product_detail: detail information of the product
+    @param fee: price of the product. now, only support RMB. unit: Fen
+    @param user: user identify
+    @param attach: attach information. must be str
     @param expire: expire in minutes 
     '''
     if not is_supportted_payway(payway):
@@ -35,16 +47,29 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
 
 @transaction.atomic
 def query_order(orderno):
+    '''
+    @summary: query status of order
+    @param orderno: order no 
+    '''
     orderItemObj = OrderItem.objects.get(orderno=orderno)
-    payResult = _PAY_GATEWAY[orderItemObj.payway].query_order(orderItemObj.orderno)
-    if payResult.Succ:
-        orderItemObj.paied = True
-        orderItemObj.dt_pay = datetime.local_now()
-        orderItemObj.save()
-    return payResult
+    if orderItemObj.paied:
+        return PayResult(True, orderItemObj.orderno)
+    else:
+        payResult = _PAY_GATEWAY[orderItemObj.payway].query_order(orderItemObj.orderno)
+        if payResult.Succ:
+            orderItemObj.paied = True
+            orderItemObj.dt_pay = datetime.local_now()
+            orderItemObj.save()
+        return payResult
 
 @transaction.atomic
 def process_notify(payway, requestContent):
+    '''
+    @summary:  process async notification from pay interface
+    @param payway: payway
+    @param requestContent:  request body from pay interface
+    @return: an instance of PayResult
+    '''
     if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
     payResult = _PAY_GATEWAY[payway].process_notify(requestContent)
