@@ -2,7 +2,8 @@ import os
 import rsa
 import base64
 from django.conf import settings
-from urllib.parse import quote_plus
+from openunipay.ali_pay import logger
+from urllib.parse import quote_plus, unquote_plus
 
 def sign(data):
     privateKey = _load_private_key()
@@ -12,11 +13,20 @@ def sign(data):
 
 
 def verify(valueDict):
-    signStr = valueDict['sign']
+    logger.info('verifying data')
+    logger.info('sign:{}'.format(valueDict['sign']))
+    signStr = unquote_plus(valueDict['sign'])
+    # remove sign and sign_type
     del valueDict['sign']
     if 'sign_type' in valueDict:
         del valueDict['sign_type']
-    tempStr = _compose_sign_str(valueDict)
+    # contact string need to verify
+    temp = []
+    for key in sorted(valueDict):
+        if not valueDict[key]:
+            continue
+        temp.append('{}={}'.format(key, valueDict[key]))
+    tempStr = '&'.join(temp)
     aliPayKey = _load_ali_pub_key()
     result = rsa.verify(tempStr, signStr, aliPayKey)
     return result 

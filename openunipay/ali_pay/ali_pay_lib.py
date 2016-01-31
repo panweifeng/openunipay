@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import logging
 from .models import AliPayOrder, AliPayResult
 from .security import verify
 from openunipay.paygateway import PayResult
+from openunipay.ali_pay import logger
 
-_logger = logging.getLogger('openunipay.ali')
 TRADE_STATE_SUCC = 'TRADE_FINISHED'
 
 def create_order(orderObj):
@@ -16,7 +15,7 @@ def process_notify(request):
     try:
         _process_order_result(dict(request.POST), result)
     except:
-        _logger.exception('process pay result notification failed. received:{}'.format(request.body))
+        logger.exception('process pay result notification failed. received:{}'.format(request.body))
     return result
 
 def query_order(orderNo):
@@ -45,5 +44,5 @@ def _process_order_result(valueDict, result):
         payResultObj.total_fee = valueDict.get('total_fee')
         payResultObj.save()
     else:
-        _logger.error('received unverified notification:{}'.format(valueDict))
+        logger.error('received unverified notification:{}'.format(valueDict))
     

@@ -7,9 +7,11 @@
 *.idea
 *.pyproj.user
 *.pydevproject
+*.cmd
 .project
 .pydevproject
 .pypirc
 /dist/
 /build/
+/key/
 /openunipay.egg-info/
