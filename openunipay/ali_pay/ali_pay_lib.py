@@ -4,7 +4,7 @@ from openunipay.paygateway import PayResult
 from openunipay.ali_pay import logger, security
 from openunipay import exceptions
 
-TRADE_STATE_SUCC = 'TRADE_FINISHED'
+TRADE_STATE_SUCC = 'TRADE_SUCCESS'
 
 def create_order(orderObj):
     assert isinstance(orderObj, AliPayOrder)
