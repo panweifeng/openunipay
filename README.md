@@ -48,22 +48,22 @@ urlpatterns = [
 3，在settings.py里添加以下配置项<br/>
 
 #####支付宝支付配置<br/>
-ALIPAY = {
-		'partner':'XXX', //支付宝partner ID
-		'seller_id':'XXX', //收款方支付宝账号如 pan.weifeng@live.cn
-		'notify_url':'https://XXX/notify/alipay/', //支付宝异步通知接收URL
-		'ali_public_key_pem':'PATH to PEM File', //支付宝公钥的PEM文件路径。如何查看，请参看支付宝文档
-		'rsa_private_key_pem':'PATH to PEM File',//您自己的支付宝账户的私钥的PEM文件路径。如何设置，请参看支付宝文档
-		'rsa_public_key_pem':'PATH to PEM File',//您自己的支付宝账户的公钥的PEM文件路径。如何设置，请参看支付宝文档
+ALIPAY = {<br/>
+		'partner':'XXX', //支付宝partner ID<br/>
+		'seller_id':'XXX', //收款方支付宝账号如 pan.weifeng@live.cn<br/>
+		'notify_url':'https://XXX/notify/alipay/', //支付宝异步通知接收URL<br/>
+		'ali_public_key_pem':'PATH to PEM File', //支付宝公钥的PEM文件路径。如何查看，请参看支付宝文档<br/>
+		'rsa_private_key_pem':'PATH to PEM File',//您自己的支付宝账户的私钥的PEM文件路径。如何设置，请参看支付宝文档<br/>
+		'rsa_public_key_pem':'PATH to PEM File',//您自己的支付宝账户的公钥的PEM文件路径。如何设置，请参看支付宝文档<br/>
 	}<br/>
 #####微信支付配置<br/>
-WEIXIN = {
-		'app_id':'XXX', //微信APPID
-		'app_seckey':'XXX', //微信APP Sec Key
-		'mch_id':'XXX', //微信商户ID
-		'mch_seckey':'XXX',//微信商户seckey
-		'mch_notify_url':'https://XXX/notify/weixin/', //微信支付异步通知接收URL
-	}
+WEIXIN = {<br/>
+		'app_id':'XXX', //微信APPID<br/>
+		'app_seckey':'XXX', //微信APP Sec Key<br/>
+		'mch_id':'XXX', //微信商户ID<br/>
+		'mch_seckey':'XXX',//微信商户seckey<br/>
+		'mch_notify_url':'https://XXX/notify/weixin/', //微信支付异步通知接收URL<br/>
+	}<br/>
         
 ----
 4, 同步数据库
