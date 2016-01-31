@@ -16,7 +16,7 @@ def create_order(weixinOrderObj):
     assert isinstance(weixinOrderObj, WeiXinOrder)
     payResultObj = WeiXinPayResult.objects.create(order=weixinOrderObj)
     url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-    data = weixinOrderObj.to_xml()
+    data = weixinOrderObj.to_xml().encode()
     r = requests.post(url, data=data, headers={'Content-Type':'application/xml'}, verify=False)
     r.encoding = 'utf-8'
     if r.status_code == 200:

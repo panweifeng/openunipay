@@ -6,7 +6,6 @@ from . import xml_helper
 
 
 _ORDER_NONCE_POPULATION = '123457890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-_UNICODE_ESCAPE_FIELDS = frozenset(('body',))
 
 class WeiXinOrder(models.Model):
     appid = models.CharField(verbose_name=u'公众账号ID', max_length=32, editable=False)
@@ -39,7 +38,7 @@ class WeiXinOrder(models.Model):
         # sign data
         valueDict = self._get_vlaue_dict()
         valueDict['nonce_str'] = random_helper.generate_nonce_str(23)
-        valueDict['sign'] = sign(valueDict, _UNICODE_ESCAPE_FIELDS)
+        valueDict['sign'] = sign(valueDict)
         return xml_helper.dict_to_xml(valueDict)
 
 class WeiXinPayResult(models.Model):
