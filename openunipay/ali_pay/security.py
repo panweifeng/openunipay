@@ -14,7 +14,7 @@ def sign(data):
 def verify(valueDict):
     signStr = valueDict['sign']
     del valueDict['sign']
-    if valueDict.has_key('sign_type'):
+    if 'sign_type' in valueDict:
         del valueDict['sign_type']
     tempStr = _compose_sign_str(valueDict)
     aliPayKey = _load_ali_pub_key()
