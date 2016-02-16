@@ -23,9 +23,17 @@ class PayGateway(object):
 
 
 class PayResult(object):
-    def __init__(self, succ, orderNo):
-        self.succ = succ
+    def __init__(self, orderNo, succ=True, lapsed=False):
         self.orderno = orderNo
+        self.succ = succ
+        self.lapsed = lapsed
+        
+    @property    
+    def OrderNo(self):
+        '''
+        @summary: order No or merchant
+        '''
+        return self.orderno
     
     @property    
     def Succ(self):
@@ -35,9 +43,9 @@ class PayResult(object):
         return self.succ
     
     @property    
-    def OrderNo(self):
+    def Lapsed(self):
         '''
-        @summary: order No
+        @summary: True: order is lapsed
         '''
-        return self.orderno
+        return self.lapsed
     

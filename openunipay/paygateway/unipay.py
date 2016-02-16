@@ -53,13 +53,12 @@ def query_order(orderno):
     '''
     orderItemObj = OrderItem.objects.get(orderno=orderno)
     if orderItemObj.paied:
-        return PayResult(True, orderItemObj.orderno)
+        return PayResult(orderItemObj.orderno)
+    elif orderItemObj.lapsed:
+        return PayResult(orderItemObj.orderno, succ=False, lapsed=True)
     else:
         payResult = _PAY_GATEWAY[orderItemObj.payway].query_order(orderItemObj.orderno)
-        if payResult.Succ:
-            orderItemObj.paied = True
-            orderItemObj.dt_pay = datetime.local_now()
-            orderItemObj.save()
+        _update_order_pay_result(payResult)
         return payResult
 
 @transaction.atomic
@@ -73,12 +72,23 @@ def process_notify(payway, requestContent):
     if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
     payResult = _PAY_GATEWAY[payway].process_notify(requestContent)
-    if payResult.Succ:
-        orderItemObj = OrderItem.objects.get(orderno=payResult.OrderNo)
-        orderItemObj.paied = True
-        orderItemObj.dt_pay = datetime.local_now()
-        orderItemObj.save()
+    _update_order_pay_result(payResult)
     return payResult
 
 def is_supportted_payway(payway):
     return payway in _PAY_GATEWAY
+
+
+def _update_order_pay_result(orderno, payResult):
+    if payResult.Succ:
+        orderItemObj = OrderItem.objects.get(orderno=payResult.OrderNo)
+        orderItemObj.paied = True
+        orderItemObj.lapsed = False
+        orderItemObj.dt_pay = datetime.local_now()
+        orderItemObj.save()
+    elif payResult.Lapsed:
+        orderItemObj = OrderItem.objects.get(orderno=payResult.OrderNo)
+        orderItemObj.paied = False
+        orderItemObj.lapsed = True
+        orderItemObj.dt_pay = None
+        orderItemObj.save()
