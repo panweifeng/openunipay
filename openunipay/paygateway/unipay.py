@@ -79,7 +79,7 @@ def is_supportted_payway(payway):
     return payway in _PAY_GATEWAY
 
 
-def _update_order_pay_result(orderno, payResult):
+def _update_order_pay_result(payResult):
     if payResult.Succ:
         orderItemObj = OrderItem.objects.get(orderno=payResult.OrderNo)
         orderItemObj.paied = True
