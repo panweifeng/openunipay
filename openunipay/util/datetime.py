@@ -1,13 +1,12 @@
 from __future__ import absolute_import
-from django.utils import timezone
 from time import time
 import datetime
 
 def utc_now():
-    return timezone.now()
+    return datetime.datetime.utcnow()
 
 def local_now():
-    return timezone.localtime(utc_now())
+    return datetime.datetime.now()
 
 def now_str():
     return local_now().strftime("%Y-%m-%d %H:%M:%S")
