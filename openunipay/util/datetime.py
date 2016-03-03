@@ -15,4 +15,4 @@ def get_timestamp():
     return int(time())
 
 def get_unix_timestamp():
-    return int((utc_now() - datetime.datetime(1970, 1, 1, tzinfo=datetime.timezone.utc)).total_seconds())
+    return int((utc_now() - datetime.datetime(1970, 1, 1, tzinfo=None)).total_seconds())
