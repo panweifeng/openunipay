@@ -14,7 +14,7 @@ class OrderItemAdmin(ImportExportModelAdmin):
     resource_class = OrderItemResource
     # list page
     list_display = ('orderno', 'user', 'product_desc', 'payway', 'fee', 'dt_start', 'dt_end', 'dt_pay', 'paied')
-    ordering = ('dt_start',)
+    ordering = ('-dt_start',)
     search_fields = ['=orderno', '=user', ] 
     list_filter = ('payway', 'paied', 'product_desc',)
     
