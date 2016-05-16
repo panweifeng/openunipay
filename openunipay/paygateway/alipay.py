@@ -12,7 +12,7 @@ class AliPayGateway(PayGateway):
         aliOrderObj.subject = orderItemObj.product_desc
         aliOrderObj.body = orderItemObj.product_detail
         aliOrderObj.total_fee = orderItemObj.fee / 100
-        aliOrderObj.it_b_pay = orderItemObj.dt_end.strftime("%Y%m%d %H%M%S")
+        aliOrderObj.it_b_pay = '30m'
         aliOrderObj.save()
         ali_pay_lib.create_order(aliOrderObj)
         return aliOrderObj.sign()

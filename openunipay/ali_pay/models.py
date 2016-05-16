@@ -10,11 +10,11 @@ _SIGN_TYPE = 'RSA'
 _PAYMENT_TYPE = '1'
 
 class AliPayOrder(models.Model):
-    out_trade_no = models.CharField(verbose_name=u'商户订单号', max_length=32, db_index=True, editable=False)
-    subject = models.CharField(verbose_name=u'商品名称', max_length=128, editable=False)
-    body = models.CharField(verbose_name=u'商品详情', max_length=512, editable=False)
-    total_fee = models.DecimalField(verbose_name=u'总金额(单位:元)', max_digits=6, decimal_places=2, editable=False)
-    it_b_pay = models.CharField(verbose_name=u'交易结束时间(yyyy-mm-dd HH:mm:ss)', max_length=19, editable=False)
+    out_trade_no = models.CharField(verbose_name='商户订单号', max_length=32, db_index=True, editable=False)
+    subject = models.CharField(verbose_name='商品名称', max_length=128, editable=False)
+    body = models.CharField(verbose_name='商品详情', max_length=512, editable=False)
+    total_fee = models.DecimalField(verbose_name='总金额(单位:元)', max_digits=6, decimal_places=2, editable=False)
+    it_b_pay = models.CharField(verbose_name='交易有效期', max_length=19, editable=False)
     
     class Meta:
         verbose_name = u'支付宝订单'
