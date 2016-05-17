@@ -12,8 +12,8 @@ class AliPayOrderResource(resources.ModelResource):
 class AliPayOrderAdmin(ImportExportModelAdmin):
     resource_class = AliPayOrderResource
     # list page
-    list_display = ('out_trade_no', 'subject', 'body', 'total_fee', 'it_b_pay', 'get_pay_result')
-    ordering = ('it_b_pay',)
+    list_display = ('date_create', 'out_trade_no', 'subject', 'body', 'total_fee', 'it_b_pay', 'get_pay_result',)
+    ordering = ('-date_create',)
     search_fields = ['=out_trade_no', ]
     
     def get_pay_result(self, obj):

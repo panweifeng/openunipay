@@ -9,12 +9,16 @@ _CHARSET = 'utf-8'
 _SIGN_TYPE = 'RSA'
 _PAYMENT_TYPE = '1'
 
+_ALIPAY_ORDER_FIELD = ('out_trade_no', 'subject', 'body', 'total_fee', 'it_b_pay',)
+
 class AliPayOrder(models.Model):
     out_trade_no = models.CharField(verbose_name='商户订单号', max_length=32, db_index=True, editable=False)
     subject = models.CharField(verbose_name='商品名称', max_length=128, editable=False)
     body = models.CharField(verbose_name='商品详情', max_length=512, editable=False)
     total_fee = models.DecimalField(verbose_name='总金额(单位:元)', max_digits=6, decimal_places=2, editable=False)
     it_b_pay = models.CharField(verbose_name='交易有效期', max_length=19, editable=False)
+    interface_data = models.TextField(verbose_name='接口数据', max_length=500, editable=False)
+    date_create = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     
     class Meta:
         verbose_name = u'支付宝订单'
@@ -23,19 +27,15 @@ class AliPayOrder(models.Model):
     def __str__(self):
         return self.out_trade_no
         
-    def _get_vlaue_dict(self):
-        fieldsList = AliPayOrder._meta.get_fields()
-        return {item.attname:getattr(self, item.attname) 
-                for item in fieldsList 
-                if not item.auto_created and getattr(self, item.attname)}
-    
     def sign(self):
         # sign data
         data = self._compose_data()
-        return '{}&sign_type="RSA"&sign="{}"'.format(data, quote_plus(security.sign(data)))
+        self.interface_data = '{}&sign_type="RSA"&sign="{}"'.format(data, quote_plus(security.sign(data)))
     
     def _compose_data(self):
-        valueDict = self._get_vlaue_dict()
+        valueDict = {item:getattr(self, item) 
+                for item in _ALIPAY_ORDER_FIELD 
+                if getattr(self, item)}
         valueDict['service'] = _SERVICE
         valueDict['_input_charset'] = _CHARSET
         valueDict['payment_type'] = _PAYMENT_TYPE

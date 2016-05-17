@@ -13,9 +13,10 @@ class AliPayGateway(PayGateway):
         aliOrderObj.body = orderItemObj.product_detail
         aliOrderObj.total_fee = orderItemObj.fee / 100
         aliOrderObj.it_b_pay = '30m'
+        aliOrderObj.sign()
         aliOrderObj.save()
         ali_pay_lib.create_order(aliOrderObj)
-        return aliOrderObj.sign()
+        return aliOrderObj.interface_data
     
     @transaction.atomic
     def process_notify(self, requestContent):
