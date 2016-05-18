@@ -17,7 +17,6 @@ class AliPayOrder(models.Model):
     body = models.CharField(verbose_name='商品详情', max_length=512, editable=False)
     total_fee = models.DecimalField(verbose_name='总金额(单位:元)', max_digits=6, decimal_places=2, editable=False)
     it_b_pay = models.CharField(verbose_name='交易有效期', max_length=19, editable=False)
-    interface_data = models.TextField(verbose_name='接口数据', max_length=500, editable=False)
     date_create = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     
     class Meta:
@@ -27,10 +26,10 @@ class AliPayOrder(models.Model):
     def __str__(self):
         return self.out_trade_no
         
-    def sign(self):
+    def compose_interface_data(self):
         # sign data
         data = self._compose_data()
-        self.interface_data = '{}&sign_type="RSA"&sign="{}"'.format(data, quote_plus(security.sign(data)))
+        return '{}&sign_type="RSA"&sign="{}"'.format(data, quote_plus(security.sign(data)))
     
     def _compose_data(self):
         valueDict = {item:getattr(self, item) 

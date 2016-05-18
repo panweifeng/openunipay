@@ -1,3 +1,4 @@
+from django.conf import settings
 from . import PayGateway
 from django.db import transaction
 from ..ali_pay.models import AliPayOrder
@@ -12,11 +13,10 @@ class AliPayGateway(PayGateway):
         aliOrderObj.subject = orderItemObj.product_desc
         aliOrderObj.body = orderItemObj.product_detail
         aliOrderObj.total_fee = orderItemObj.fee / 100
-        aliOrderObj.it_b_pay = '30m'
-        aliOrderObj.sign()
+        aliOrderObj.it_b_pay = settings.ALIPAY['order_expire_in']
         aliOrderObj.save()
         ali_pay_lib.create_order(aliOrderObj)
-        return aliOrderObj.interface_data
+        return aliOrderObj.compose_interface_data()
     
     @transaction.atomic
     def process_notify(self, requestContent):

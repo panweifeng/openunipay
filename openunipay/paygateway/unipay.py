@@ -3,11 +3,10 @@
 @author: EricPan(pan.weifeng@live.cn)
 @contact: EricPan(pan.weifeng@live.cn)
 '''
-
 from django.db import transaction
 from openunipay.models import OrderItem, PAY_WAY_WEIXIN, PAY_WAY_ALI
 from openunipay.paygateway import weixin, alipay, PayResult
-from openunipay import exceptions
+from openunipay import exceptions, logger
 from openunipay.util import datetime
     
 _PAY_GATEWAY = {PAY_WAY_WEIXIN:weixin.WeiXinPayGateway(),
@@ -43,6 +42,7 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     
     # send order to pay gateway
     gatewayData = _PAY_GATEWAY[payway].create_order(orderItemObj, clientIp)
+    logger.info('order created. orderno:{}, payway:{}, clientIp:{}, product:{},fee:{}, gateway data:{}'.format(orderno, payway, clientIp, product_desc, fee, gatewayData))
     return gatewayData
 
 @transaction.atomic
@@ -73,6 +73,7 @@ def process_notify(payway, requestContent):
         raise exceptions.PayWayError()
     payResult = _PAY_GATEWAY[payway].process_notify(requestContent)
     _update_order_pay_result(payResult)
+    logger.info('process notify. payway:{}, content:{}'.format(payway, requestContent))
     return payResult
 
 def is_supportted_payway(payway):
