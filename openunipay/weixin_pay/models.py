@@ -14,7 +14,7 @@ class WeiXinOrder(models.Model):
     attach = models.CharField(verbose_name=u'附加数据', max_length=127, null=True, blank=True, editable=False)
     out_trade_no = models.CharField(verbose_name=u'商户订单号', max_length=32, db_index=True, editable=False)
     fee_type = models.CharField(verbose_name=u'货币类型', max_length=16, editable=False)
-    total_fee = models.SmallIntegerField(verbose_name=u'总金额', editable=False)
+    total_fee = models.PositiveIntegerField(verbose_name=u'总金额', editable=False)
     spbill_create_ip = models.CharField(verbose_name=u'终端IP', max_length=16, editable=False)
     time_start = models.CharField(verbose_name=u'交易起始时间', max_length=14, editable=False)
     time_expire = models.CharField(verbose_name=u'交易结束时间', max_length=14, editable=False)
