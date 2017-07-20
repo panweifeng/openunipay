@@ -21,6 +21,16 @@ class PayGateway(object):
         '''
         pass
 
+    def generate_qr_pay_url(self, orderItemObj, clientIp):
+        '''
+        @summary: create url that can be used to generate qr code
+        @return: url
+        '''
+        pass
+
+    def process_qr_pay_notify(self,requestContent):
+        pass
+
 
 class PayResult(object):
     def __init__(self, orderNo, succ=True, lapsed=False):

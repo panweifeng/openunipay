@@ -1,12 +1,12 @@
 from . import PayGateway
 from django.db import transaction
 from django.conf import settings
-from openunipay.util import random_helper,datetime
-from openunipay.weixin_pay.models import WeiXinOrder
+from openunipay.util import random_helper, datetime
+from openunipay.weixin_pay.models import WeiXinOrder, WeiXinQRPayEntity
 from openunipay.weixin_pay import weixin_pay_lib, security
 
+
 class WeiXinPayGateway(PayGateway):
-    
     @transaction.atomic
     def create_order(self, orderItemObj, clientIp):
         weixinOrderObj = WeiXinOrder()
@@ -23,15 +23,15 @@ class WeiXinPayGateway(PayGateway):
         weixinOrderObj.trade_type = 'APP'
         weixinOrderObj.save()
         prepayid = weixin_pay_lib.create_order(weixinOrderObj)
-        data = {'appid':settings.WEIXIN['app_id'],
-                'partnerid':settings.WEIXIN['mch_id'],
-                'prepayid':prepayid,
-                'package':'Sign=WXPay',
-                'noncestr':random_helper.generate_nonce_str(23),
-                'timestamp':str(datetime.get_unix_timestamp())}
+        data = {'appid': settings.WEIXIN['app_id'],
+                'partnerid': settings.WEIXIN['mch_id'],
+                'prepayid': prepayid,
+                'package': 'Sign=WXPay',
+                'noncestr': random_helper.generate_nonce_str(23),
+                'timestamp': str(datetime.get_unix_timestamp())}
         data['sign'] = security.sign(data)
         return data
-    
+
     @transaction.atomic
     def process_notify(self, requestContent):
         return weixin_pay_lib.process_notify(requestContent)
@@ -39,3 +39,16 @@ class WeiXinPayGateway(PayGateway):
     @transaction.atomic
     def query_order(self, orderNo):
         return weixin_pay_lib.query_order(orderNo)
+
+    @transaction.atomic
+    def generate_qr_pay_url(self, orderItemObj, clientIp):
+        qrPayEntiry = WeiXinQRPayEntity()
+        qrPayEntiry.appid = settings.WEIXIN['app_id']
+        qrPayEntiry.mch_id = settings.WEIXIN['mch_id']
+        qrPayEntiry.time_stamp = str(datetime.get_unix_timestamp())
+        qrPayEntiry.product_id = orderItemObj.orderno
+        qrPayEntiry.save()
+        return qrPayEntiry.to_url()
+
+    def process_qr_pay_notify(self, requestContent):
+        return weixin_pay_lib.process_qr_pay_nodify(requestContent)
