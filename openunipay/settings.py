@@ -116,11 +116,3 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-
-WEIXIN = {
-    'app_id': 'wx35db3b0cccaeb3ce',
-    'app_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
-    'mch_id': '1486260882',
-    'mch_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
-    'mch_notify_url': 'https://apistage.9haomi.cn/pay/api/notify/weixin/',
-}
