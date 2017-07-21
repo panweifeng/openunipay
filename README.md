@@ -45,9 +45,10 @@ INSTALLED_APPS = (
 ----
 2, 发布 支付宝 和 微信支付支付 异步支付结果通知URL。支付成功后，支付宝和微信支付 在支付成功后会通过此URL通知支付结果
 openunipay 已经提供了用于处理支付结果的django view. 你只需配置django URL 将openunipay的view 发布即可。<br/>
-openuipay 提供了以下两个view<br/>
+openuipay 提供了以下三个个view<br/>
 openuipay.api.views_alipay.process_notify<br/>
 openuipay.api.views_weixin.process_notify<br/>
+openuipay.api.views_weixin.process_qr_notify<br/>
 
 在你的url.py里
 *********************************************************
