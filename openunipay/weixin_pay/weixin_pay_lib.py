@@ -128,23 +128,15 @@ def process_qr_pay_nodify(notifyContent):
 
 
 def _process_qr_pay_nodify(responseData):
-    if responseData['return_code'] == CODE_SUCC:
-        if responseData['result_code'] == CODE_SUCC:
-            # check sign
-            signStr = responseData['sign']
-            del responseData['sign']
-            signCheck = sign(responseData)
-            if signStr != signCheck:
-                _logger.error('received untrusted qr pay notification:{}'.format(responseData))
-                raise exceptions.InsecureDataError()
-            else:
-                # save data
-                qrPayRecord = WeiXinQRPayRecord.objects.create(
-                    appid=responseData.get('appid'), mch_id=responseData.get('mch_id'), openid=responseData.get('openid'), product_id=responseData.get('product_id'))
-                return qrPayRecord.product_id, qrPayRecord.openid
-        else:
-            raise exceptions.PayProcessError('qr pay notify processed failed. err_code:{},err_code_desc:{}'.format(responseData.get('err_code'), responseData.get('err_code_des')))
-            _logger.error('qr pay notify processed failed. response:{}'.format(responseData))
+    # check sign
+    signStr = responseData['sign']
+    del responseData['sign']
+    signCheck = sign(responseData)
+    if signStr != signCheck:
+        _logger.error('received untrusted qr pay notification:{}'.format(responseData))
+        raise exceptions.InsecureDataError()
     else:
-        raise exceptions.PayProcessError('qr pay notify processed failed. return_msg:{}'.format(responseData.get('return_msg')))
-        _logger.error('data communication failed. response:{}'.format(responseData))
+        # save data
+        qrPayRecord = WeiXinQRPayRecord.objects.create(
+            appid=responseData.get('appid'), mch_id=responseData.get('mch_id'), openid=responseData.get('openid'), product_id=responseData.get('product_id'))
+        return qrPayRecord.product_id, qrPayRecord.openid
