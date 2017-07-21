@@ -4,7 +4,7 @@
 @contact: EricPan(pan.weifeng@live.cn)
 '''
 from django.db import transaction
-from openunipay.models import OrderItem, PAY_WAY_WEIXIN, PAY_WAY_ALI
+from openunipay.models import OrderItem, PAY_WAY_WEIXIN, PAY_WAY_ALI, Product
 from openunipay.paygateway import weixin, alipay, PayResult
 from openunipay import exceptions, logger
 from openunipay.util import datetime
@@ -100,36 +100,17 @@ def _update_order_pay_result(payResult):
 
 
 @transaction.atomic
-def generate_qr_pay_url(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440):
+def generate_qr_pay_url(payway, productid):
     '''
-    @summary: create order
-    @param orderno: order no
-    @param payway: payway
-    @param clientIp: IP address of the client that start the pay process
-    @param product_desc: short description of the product
-    @param product_detail: detail information of the product
-    @param fee: price of the product. now, only support RMB. unit: Fen
-    @param user: user identify
-    @param attach: attach information. must be str
-    @param expire: expire in minutes 
+    @summary: create qr pay url
+    @param productid: product id
     '''
     if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
 
-    orderItemObj = OrderItem()
-    orderItemObj.orderno = orderno
-    orderItemObj.user = user
-    orderItemObj.product_desc = product_desc
-    orderItemObj.product_detail = product_detail
-    orderItemObj.fee = fee
-    orderItemObj.payway = payway
-    orderItemObj.attach = attach
-    orderItemObj.initial_orlder(expire)
-    orderItemObj.save()
-
-    # send order to pay gateway
-    url = _PAY_GATEWAY[payway].generate_qr_pay_url(orderItemObj, clientIp)
-    logger.info('qr pay url generated. orderno:{}, payway:{}, clientIp:{}, product:{},fee:{}, url:{}'.format(orderno, payway, clientIp, product_desc, fee, url))
+# send order to pay gateway
+    url = _PAY_GATEWAY[payway].generate_qr_pay_url(productid)
+    logger.info('qr pay url generated. productid:{}, url:{}'.format(productid, url))
     return url
 
 
@@ -138,8 +119,15 @@ def process_qr_pay_notify(payway, requestContent, clientIp):
     if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
 
-    orderNo = _PAY_GATEWAY[payway].process_qr_pay_notify(requestContent)
-    orderItemObj = OrderItem.objects.filter(orderno=orderNo).first()
-    _PAY_GATEWAY[payway].create_order(orderItemObj, clientIp)
-    logger.info('process_qr_pay_notify. payway:{}, content:{}'.format(payway, requestContent))
-    return orderNo
+    productid, uid = _PAY_GATEWAY[payway].process_qr_pay_notify(requestContent)
+
+    productObj = Product.objects.get(productid=productid)
+
+    orderno = _generate_qr_orderno(payway, productid)
+    create_order(orderno, payway, clientIp, productObj.product_desc, productObj.product_detail, productObj.fee, user=uid)
+    logger.info('process_qr_pay_notify. payway:{}, content:{}, orderno:{}'.format(payway, requestContent, orderno))
+    return orderno
+
+
+def _generate_qr_orderno(payway, productid):
+    return '{}-{}-{}'.format(payway, productid, datetime.get_unix_timestamp())

@@ -8,7 +8,8 @@ from datetime import timedelta
 
 PAY_WAY_WEIXIN = 'WEIXIN'
 PAY_WAY_ALI = 'ALI'
-PAY_WAY = ((PAY_WAY_WEIXIN, u'微信支付'), (PAY_WAY_ALI, u'支付宝支付'),)
+PAY_WAY = ((PAY_WAY_WEIXIN, u'微信支付'),
+           (PAY_WAY_ALI, u'支付宝支付'), )
 
 
 class OrderItem(models.Model):
@@ -26,18 +27,31 @@ class OrderItem(models.Model):
     payway = models.CharField(verbose_name=u'支付方式', max_length=10, null=False, blank=False, choices=PAY_WAY, default=PAY_WAY[0][0])
     date_create = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     date_update = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
-    
-    
+
     class Meta:
         verbose_name = '付款单'
         verbose_name_plural = '付款单'
-        
+
     def __str__(self):
         return self.orderno
-        
+
     def _set_expire_time(self, expire):
         self.dt_start = datetime.local_now()
         self.dt_end = self.dt_start + timedelta(minutes=expire)
-        
+
     def initial_orlder(self, expire):
         self._set_expire_time(expire)
+
+
+class Product(models.Model):
+    productid = models.CharField(verbose_name=u'商品ID', max_length=50, primary_key=True)
+    product_desc = models.CharField(verbose_name=u'商品描述', max_length=128, null=False, blank=False)
+    product_detail = models.TextField(verbose_name=u'商品详情', max_length=1000, null=False, blank=False)
+    fee = models.DecimalField(verbose_name=u'金额(单位:分)', max_digits=6, decimal_places=0, null=False, blank=False)
+    weinxin_qrurl = models.CharField(verbose_name=u'微信扫码支付URL', max_length=500, null=True, blank=True)
+    date_create = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
+    date_update = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
+
+    class Meta:
+        verbose_name = '商品'
+        verbose_name_plural = '商品'

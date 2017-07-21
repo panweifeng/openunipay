@@ -19,5 +19,5 @@ from openunipay.api import views_alipay, views_weixin
 urlpatterns = [
     url(r'^notify/weixin/$', views_weixin.process_notify),
     url(r'^notify/alipay/$', views_alipay.process_notify),
+    url(r'^qrnotify/weixin/$', views_weixin.process_qr_notify),
 ]
-

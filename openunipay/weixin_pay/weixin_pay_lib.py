@@ -141,7 +141,7 @@ def _process_qr_pay_nodify(responseData):
                 # save data
                 qrPayRecord = WeiXinQRPayRecord.objects.create(
                     appid=responseData.get('appid'), mch_id=responseData.get('mch_id'), openid=responseData.get('openid'), product_id=responseData.get('product_id'))
-                return qrPayRecord.product_id
+                return qrPayRecord.product_id, qrPayRecord.openid
         else:
             raise exceptions.PayProcessError('qr pay notify processed failed. err_code:{},err_code_desc:{}'.format(responseData.get('err_code'), responseData.get('err_code_des')))
             _logger.error('qr pay notify processed failed. response:{}'.format(responseData))

@@ -41,12 +41,12 @@ class WeiXinPayGateway(PayGateway):
         return weixin_pay_lib.query_order(orderNo)
 
     @transaction.atomic
-    def generate_qr_pay_url(self, orderItemObj, clientIp):
+    def generate_qr_pay_url(self, product_id):
         qrPayEntiry = WeiXinQRPayEntity()
         qrPayEntiry.appid = settings.WEIXIN['app_id']
         qrPayEntiry.mch_id = settings.WEIXIN['mch_id']
         qrPayEntiry.time_stamp = str(datetime.get_unix_timestamp())
-        qrPayEntiry.product_id = orderItemObj.orderno
+        qrPayEntiry.product_id = product_id
         qrPayEntiry.save()
         return qrPayEntiry.to_url()
 

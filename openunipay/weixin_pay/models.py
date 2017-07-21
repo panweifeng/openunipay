@@ -19,7 +19,7 @@ class WeiXinQRPayEntity(models.Model):
         verbose_name_plural = u'微信扫码支付-二维码URL'
 
     def _get_vlaue_dict(self):
-        fieldsList = WeiXinOrder._meta.get_fields()
+        fieldsList = WeiXinQRPayEntity._meta.get_fields()
         return {item.attname: getattr(self, item.attname) for item in fieldsList if not item.auto_created and getattr(self, item.attname)}
 
     def to_url(self):
@@ -28,7 +28,7 @@ class WeiXinQRPayEntity(models.Model):
         valueDict['nonce_str'] = random_helper.generate_nonce_str(23)
         valueDict['sign'] = sign(valueDict)
         urlparameer = parse.urlencode(valueDict)
-        return 'weixin：//wxpay/bizpayurl?{}'.format(urlparameer)
+        return 'weixin://wxpay/bizpayurl?{}'.format(urlparameer)
 
 
 class WeiXinQRPayRecord(models.Model):
