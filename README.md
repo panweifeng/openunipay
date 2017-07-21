@@ -15,7 +15,7 @@ openunipay 统一支付接口 - 集成了微信、支付宝支付
 
 更新:
 =======================
-V0.2.1 2017-07  增加扫码支付的支持，目前及支持模式1<br/>
+V0.2.1 2017-07  增加扫码支付的支持，目前仅支持模式1<br/>
 
 ----
 
@@ -91,5 +91,23 @@ python manage.py migrate --run-syncdb<br/>
 ----
 
 
+如何使用：
+=======================
+1，创建订单<br/>
+from openunipay.paygateway import unipay <br/>
+from openunipay.models import PAY_WAY_WEIXIN,PAY_WAY_ALI  //PAY_WAY_WEIXIN:微信支付  PAY_WAY_ALI:支付宝支付<br/>
+
+create_order.create_order(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440, **kwargs): <br/>
+此方法会返回支付信息。在APP中发起支付时 需要使用此支付信息。所有数据已经按照微信和支付宝接口要求做了处理。APP无需再次处理。<br/>
+
+
+2, 查寻订单<br/>
+query_order(orderno)<br/>
+APP支付成功后，需要调用此接口确认支付。发货流程需要在此方法里处理。<br/>
+
+
+3. 生成扫码支付二维码（目前仅支持微信扫码支付模式1)<br/>
+generate_qr_pay_url(payway, productid)<br/>
+已经在Admin 里增加了Production Model Admin. 只需要增加商品即可生成支付URL. 然后用URL生成二维码。 你也可以用此方法的链接在服务端生成二维码图片.<br/>
 
 ----
