@@ -55,6 +55,7 @@ class WeiXinOrder(models.Model):
     time_expire = models.CharField(verbose_name=u'交易结束时间', max_length=14, editable=False)
     notify_url = models.CharField(verbose_name=u'通知地址', max_length=256, editable=False)
     trade_type = models.CharField(verbose_name=u'交易类型', max_length=16, editable=False)
+    openid = models.CharField(verbose_name=u'用户标识(openId)', null=True, blank=True, max_length=128, editable=False)
 
     class Meta:
         verbose_name = u'微信统一订单'

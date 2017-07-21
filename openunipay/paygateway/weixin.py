@@ -22,6 +22,7 @@ class WeiXinPayGateway(PayGateway):
         weixinOrderObj.time_expire = orderItemObj.dt_end.strftime("%Y%m%d%H%M%S")
         weixinOrderObj.notify_url = settings.WEIXIN['mch_notify_url']
         weixinOrderObj.trade_type = kwargs.get('trade_type', 'APP')
+        weixinOrderObj.openid = kwargs.get('openid')
         weixinOrderObj.save()
         prepayid = weixin_pay_lib.create_order(weixinOrderObj)
         data = {'appid': settings.WEIXIN['app_id'],
@@ -53,13 +54,13 @@ class WeiXinPayGateway(PayGateway):
 
     @transaction.atomic
     def process_qr_pay_notify(self, requestContent):
-        productid, uid = weixin_pay_lib.process_qr_pay_nodify(requestContent)
+        notifyObj = weixin_pay_lib.process_qr_pay_notify(requestContent)
 
-        productObj = Product.objects.get(productid=productid)
+        productObj = Product.objects.get(productid=notifyObj['product_id'])
 
         orderItemObj = OrderItem()
-        orderItemObj.orderno = self._generate_qr_orderno(productid)
-        orderItemObj.user = uid
+        orderItemObj.orderno = self._generate_qr_orderno(productObj.productid)
+        orderItemObj.user = notifyObj['openid']
         orderItemObj.product_desc = productObj.product_desc
         orderItemObj.product_detail = productObj.product_detail
         orderItemObj.fee = productObj.fee
@@ -68,15 +69,15 @@ class WeiXinPayGateway(PayGateway):
         orderItemObj.initial_orlder(1440)
         orderItemObj.save()
 
-        weixinOrderItem = self.create_order(orderItemObj, settings.WEIXIN['clientIp'], trade_type='NATIVE')
+        weixinOrderItem = self.create_order(orderItemObj, settings.WEIXIN['clientIp'], trade_type='NATIVE', openid=notifyObj['openid'])
 
         data = {
             'return_code': 'SUCCESS',
             'result_code': 'SUCCESS',
             'appid': settings.WEIXIN['app_id'],
             'mch_id': settings.WEIXIN['mch_id'],
-            'prepayid': weixinOrderItem['prepayid'],
-            'noncestr': random_helper.generate_nonce_str(23),
+            'prepay_id': weixinOrderItem['prepayid'],
+            'nonce_str': notifyObj['nonce_str'],
         }
         data['sign'] = security.sign(data)
         return xml_helper.dict_to_xml(data)

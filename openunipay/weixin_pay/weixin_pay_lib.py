@@ -108,19 +108,19 @@ def _compose_pay_result(orderNo, tradestate):
 
 
 ############ 扫码支付 ##################
-def process_qr_pay_nodify(notifyContent):
+def process_qr_pay_notify(notifyContent):
     '''
     @summary: 处理微信扫码支付异步通知，返回订单号
     '''
     try:
         responseData = xml_helper.xml_to_dict(notifyContent)
-        result = _process_qr_pay_nodify(responseData)
+        result = _process_qr_pay_notify(responseData)
         return result
     except:
         _logger.exception('process pay result notification failed. received:{}'.format(notifyContent))
 
 
-def _process_qr_pay_nodify(responseData):
+def _process_qr_pay_notify(responseData):
     # check sign
     signStr = responseData['sign']
     del responseData['sign']
@@ -132,4 +132,4 @@ def _process_qr_pay_nodify(responseData):
         # save data
         qrPayRecord = WeiXinQRPayRecord.objects.create(
             appid=responseData.get('appid'), mch_id=responseData.get('mch_id'), openid=responseData.get('openid'), product_id=responseData.get('product_id'))
-        return qrPayRecord.product_id, qrPayRecord.openid
+        return {'product_id': qrPayRecord.product_id, 'openid': qrPayRecord.openid, 'nonce_str': responseData.get('nonce_str')}
