@@ -18,23 +18,25 @@ _logger = logging.getLogger('openunipay.weixin')
 ############### 统一下单 #######################
 def create_order(weixinOrderObj):
     assert isinstance(weixinOrderObj, WeiXinOrder)
+    _logger.info("creating order")
     payResultObj = WeiXinPayResult.objects.create(order=weixinOrderObj)
     url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
     data = weixinOrderObj.to_xml().encode()
+    _logger.info("request data is:{}".format(data))
     r = requests.post(url, data=data, headers={'Content-Type': 'application/xml'}, verify=False)
     r.encoding = 'utf-8'
+    _logger.info("response body is:{}".format(r.text))
     if r.status_code == 200:
         responseData = xml_helper.xml_to_dict(r.text)
         if responseData['return_code'] == CODE_SUCC and responseData['result_code'] == CODE_SUCC:
             payResultObj.prepayid = responseData['prepay_id']
             payResultObj.save()
+            _logger.info("order created. prepayid is {}".format(payResultObj.prepayid))
             return responseData['prepay_id']
         else:
-            _logger.error(_format_log_message('create_order failed', r))
             raise APIError(responseData['return_msg'])
     else:
-        _logger.error(_format_log_message('create_order failed', r))
-        raise APIError()
+        raise APIError('status from weixin is not 200')
 
 
 def process_notify(notifyContent):
@@ -96,15 +98,6 @@ def _process_order_result(responseData):
     else:
         raise exceptions.PayProcessError('request processed failed. return_msg:{}'.format(responseData.get('return_msg')))
         _logger.error('data communication failed. response:{}'.format(responseData))
-
-
-def _format_log_message(message, r):
-    return u'''
-           {}
-           url:{}
-           response code:{}
-           response body:{}
-           '''.format(message, r.url, r.status_code, r.text)
 
 
 def _compose_pay_result(orderNo, tradestate):

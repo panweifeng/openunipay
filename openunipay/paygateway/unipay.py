@@ -14,7 +14,7 @@ _PAY_GATEWAY = {PAY_WAY_WEIXIN: weixin.WeiXinPayGateway(),
 
 
 @transaction.atomic
-def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440):
+def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440, **kwargs):
     '''
     @summary: create order
     @param orderno: order no
@@ -42,7 +42,7 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     orderItemObj.save()
 
     # send order to pay gateway
-    gatewayData = _PAY_GATEWAY[payway].create_order(orderItemObj, clientIp)
+    gatewayData = _PAY_GATEWAY[payway].create_order(orderItemObj, clientIp, **kwargs)
     logger.info('order created. orderno:{}, payway:{}, clientIp:{}, product:{},fee:{}, gateway data:{}'.format(orderno, payway, clientIp, product_desc, fee, gatewayData))
     return gatewayData
 
@@ -115,19 +115,7 @@ def generate_qr_pay_url(payway, productid):
 
 
 @transaction.atomic
-def process_qr_pay_notify(payway, requestContent, clientIp):
+def process_qr_pay_notify(payway, requestContent):
     if not is_supportted_payway(payway):
         raise exceptions.PayWayError()
-
-    productid, uid = _PAY_GATEWAY[payway].process_qr_pay_notify(requestContent)
-
-    productObj = Product.objects.get(productid=productid)
-
-    orderno = _generate_qr_orderno(payway, productid)
-    create_order(orderno, payway, clientIp, productObj.product_desc, productObj.product_detail, productObj.fee, user=uid)
-    logger.info('process_qr_pay_notify. payway:{}, content:{}, orderno:{}'.format(payway, requestContent, orderno))
-    return orderno
-
-
-def _generate_qr_orderno(payway, productid):
-    return '{}-{}-{}'.format(payway, productid, datetime.get_unix_timestamp())
+    return _PAY_GATEWAY[payway].process_qr_pay_notify(requestContent)

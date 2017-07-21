@@ -112,7 +112,51 @@ USE_L10N = False
 
 USE_TZ = False
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s]-[%(asctime)s]-[%(name)s]: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.db': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': [
+            'console',
+        ],
+        'level': 'DEBUG',
+    },
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+WEIXIN = {
+    'app_id': 'wx35db3b0cccaeb3ce',
+    'app_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
+    'mch_id': '1486260882',
+    'mch_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
+    'mch_notify_url': 'http://stage.z2hacademy.cn/api/notify/weixin/',
+    'clientIp': '114.55.174.248',
+}

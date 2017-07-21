@@ -3,7 +3,7 @@ class PayGateway(object):
     @summary: the base class for pay gateway
     '''
 
-    def create_order(self, orderItemObj, clientIp):
+    def create_order(self, orderItemObj, clientIp, **kwargs):
         pass
 
     def query_order(self, orderNo):

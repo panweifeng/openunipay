@@ -14,5 +14,9 @@ def process_notify(request):
 
 def process_qr_notify(request):
     _logger.info('received weixin qr pay notification.body:{}'.format(request.body))
-    unipay.process_qr_pay_notify(PAY_WAY_WEIXIN, request.body, request.META['REMOTE_ADDR'])
-    return HttpResponse('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>', 'application/xml', 200)
+    try:
+        responseData = unipay.process_qr_pay_notify(PAY_WAY_WEIXIN, request.body)
+        return HttpResponse(responseData, 'application/xml', 200)
+    except:
+        _logger.exception('process qr notify failed')
+        return HttpResponse(None, 500)
