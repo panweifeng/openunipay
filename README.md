@@ -51,12 +51,12 @@ openuipay.api.views_weixin.process_notify<br/>
 
 在你的url.py里
 *********************************************************
-from openunipay.api import views_alipay, views_weixin
+from openunipay.api import views_alipay, views_weixin<br/>
 
 urlpatterns = [
-    url(r'^notify/weixin/$', views_weixin.process_notify),      //用户使用微信付款后，微信服务器会调用这个接口。详细流程参看微信支付文档
-	url(r'^qrnotify/weixin/$', views_weixin.process_qr_notify), //微信扫码支付， 用户扫描二维码后，微信服务器会调用这个接口。详细流程请参考微信扫码支付文档
-    url(r'^notify/alipay/$', views_alipay.process_notify),      //支付宝支付后，支付宝服务器会调用这个接口。详细流程参看支付宝文档
+    url(r'^notify/weixin/$', views_weixin.process_notify),      //用户使用微信付款后，微信服务器会调用这个接口。详细流程参看微信支付文档<br/>
+	url(r'^qrnotify/weixin/$', views_weixin.process_qr_notify), //微信扫码支付， 用户扫描二维码后，微信服务器会调用这个接口。详细流程请参考微信扫码支付文档<br/>
+    url(r'^notify/alipay/$', views_alipay.process_notify),      //支付宝支付后，支付宝服务器会调用这个接口。详细流程参看支付宝文档<br/>
 ]
 ***********************************************************
 
@@ -85,7 +85,7 @@ WEIXIN = {<br/>
 ----
 4, 同步数据库
 
-python manage.py migrate --run-syncdb
+python manage.py migrate --run-syncdb<br/>
 
 ----
 
