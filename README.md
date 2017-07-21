@@ -8,7 +8,17 @@ openunipay 统一支付接口 - 集成了微信、支付宝支付
 
 目前在开发阶段，请勿在生产环境中使用。
 
+更新:
+=======================
+V0.2.1 2017-07  增加扫码支付的支持，目前及支持模式1
+
 ----
+
+RoadMap:
+=======================
+1. 增加微信扫码模式2的支持
+2，增加支付宝扫码支付的支持
+3，支持支付宝新接口
 
 安装方法：
 =======================
@@ -39,8 +49,9 @@ openuipay.api.views_weixin.process_notify<br/>
 from openunipay.api import views_alipay, views_weixin
 
 urlpatterns = [
-    url(r'^notify/weixin/$', views_weixin.process_notify),
-    url(r'^notify/alipay/$', views_alipay.process_notify),
+    url(r'^notify/weixin/$', views_weixin.process_notify),      //用户使用微信付款后，微信服务器会调用这个接口。详细流程参看微信支付文档
+	url(r'^qrnotify/weixin/$', views_weixin.process_qr_notify), //微信扫码支付， 用户扫描二维码后，微信服务器会调用这个接口。详细流程请参考微信扫码支付文档
+    url(r'^notify/alipay/$', views_alipay.process_notify),      //支付宝支付后，支付宝服务器会调用这个接口。详细流程参看支付宝文档
 ]
 ***********************************************************
 
@@ -63,6 +74,7 @@ WEIXIN = {<br/>
 		'mch_id':'XXX', //微信商户ID<br/>
 		'mch_seckey':'XXX',//微信商户seckey<br/>
 		'mch_notify_url':'https://XXX/notify/weixin/', //微信支付异步通知接收URL<br/>
+		'clientIp':'',//扫码支付时，会使用这个IP地址发送给微信API, 请设置为您服务器的IP
 	}<br/>
         
 ----
