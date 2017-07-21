@@ -152,11 +152,3 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
-WEIXIN = {
-    'app_id': 'wx35db3b0cccaeb3ce',
-    'app_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
-    'mch_id': '1486260882',
-    'mch_seckey': 'WDed323DDDsss3334223FFDDE223ddva',
-    'mch_notify_url': 'http://stage.z2hacademy.cn/api/notify/weixin/',
-    'clientIp': '114.55.174.248',
-}
