@@ -152,3 +152,13 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
+
+#### 测试
+WEIXIN = {
+    'app_id': 'wx2428e34e0e7dc6ef',
+    'app_seckey': '51c56b886b5be869567dd389b3e5d1d6',
+    'mch_id': '1233410002',
+    'mch_seckey': '51c56b886b5be869567dd389b3e5d1d6',
+    'mch_notify_url': 'http://test.cn',
+    'clientIp': '111.11.11.11',
+}

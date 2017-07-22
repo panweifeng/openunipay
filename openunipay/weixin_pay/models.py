@@ -30,6 +30,13 @@ class WeiXinQRPayEntity(models.Model):
         urlparameer = parse.urlencode(valueDict)
         return 'weixin://wxpay/bizpayurl?{}'.format(urlparameer)
 
+    def to_raw_rul(self):
+        valueDict = self._get_vlaue_dict()
+        valueDict['nonce_str'] = random_helper.generate_nonce_str(23)
+        valueDict['sign'] = sign(valueDict)
+        temp = ['{}={}'.format(k, v) for k, v in valueDict.items()]
+        return 'weixin://wxpay/bizpayurl?{}'.format('&'.join(temp))
+
 
 class WeiXinQRPayRecord(models.Model):
     appid = models.CharField(verbose_name=u'公众账号ID', max_length=32, editable=False)

@@ -50,7 +50,8 @@ class WeiXinPayGateway(PayGateway):
         qrPayEntiry.time_stamp = str(datetime.get_unix_timestamp())
         qrPayEntiry.product_id = product_id
         qrPayEntiry.save()
-        return qrPayEntiry.to_url()
+        url = weixin_pay_lib.request_shorten_url(qrPayEntiry.to_raw_rul())
+        return url
 
     @transaction.atomic
     def process_qr_pay_notify(self, requestContent):
