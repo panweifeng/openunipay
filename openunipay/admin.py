@@ -50,7 +50,8 @@ class ProductAdmin(ImportExportModelAdmin):
     search_fields = ['=productid', ]
 
     def save_model(self, request, obj, form, change):
-        obj.weinxin_qrurl = unipay.generate_qr_pay_url(PAY_WAY_WEIXIN, obj.productid)
+        if not change:
+            obj.weinxin_qrurl = unipay.generate_qr_pay_url(PAY_WAY_WEIXIN, obj.productid)
         admin.ModelAdmin.save_model(self, request, obj, form, change)
 
 
